@@ -1,16 +1,16 @@
 #! /usr/bin/env ruby
 # because rubygems shims assume a gem's executables are Ruby
 
+require "rubygems"
 require "shellwords"
 
-platform_info = Gem::Platform.local
-platform_string = "#{platform_info.cpu}-#{platform_info.os}"
+platform_string = RbConfig::CONFIG['arch']
 
 exe_path =
   case platform_string
-  when /darwin\z/  then File.join(__dir__, "darwin/sass")
-  when /linux\z/   then File.join(__dir__, "linux/sass")
-  when /mingw32\z/ then File.join(__dir__, "mingw32/sass.bat")
+  when /darwin\z/     then File.join(__dir__, "darwin/sass")
+  when /linux/        then File.join(__dir__, "#{platform_string}/sass")
+  when /mingw32\z/    then File.join(__dir__, "mingw32/sass.bat")
   else
     STDERR.puts(<<~ERRMSG)
       ERROR: dartsass-ruby does not support the #{platform_string} platform
